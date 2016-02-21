@@ -1,19 +1,19 @@
 // ==UserScript==
-// @name		NiceMPNotifs
-// @namespac	CrazyJeux/Daring-Do
-// @author		CrazyJeux/Daring-Do
-// @match		*://www.jeuxvideo.com/*
-// @descriptio	Les icônes des MP et des notifications sont toujours visibles, les nombres indiqués sont régulièrement mis à jour et cliquer sur l'icône des MP amène directement à ceux-ci.
-// @version		2
-// @resource	jQueryJS    https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.0/jquery.min.js
-// @gran		GM_getResourceText
-// @grant		unsafeWindow
-// @grant		GM_info
+// @name         NiceMPNotifs
+// @namespace    CrazyJeux/Daring-Do
+// @author       CrazyJeux/Daring-Do
+// @match        *://www.jeuxvideo.com/*
+// @description  Les icônes des MP et des notifications sont toujours visibles, les nombres indiqués sont régulièrement mis à jour et cliquer sur l'icône des MP amène directement à ceux-ci.
+// @version      2
+// @resource     jQueryJS    https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.0/jquery.min.js
+// @grant        GM_getResourceText
+// @grant        unsafeWindow
+// @grant        GM_info
 // ==/UserScript==
 
 function unique() {
     function toCall() {
-        function updateNbOfNewMP() {     
+        function updateNbOfNewMP() {
             var xmlhttp = new XMLHttpRequest();
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
@@ -97,28 +97,17 @@ function unique() {
         var $nbNewMPArea = $(".account-number-mp");
         if ($nbNewMPArea.length !== 0) {
             setInterval(updateNbOfNewMP, 3000);
-            
-            
-            
-            
+
+
+
+
             var style = document.createElement("style");
             style.type = "text/css";
             style.setAttribute("data-nicempnotifs-style", "true");
             style.innerHTML = ".account-number-mp:hover, .account-number-notif:hover { font-size: 110%; } ";
             style.innerHTML += " .header-top >.header-container { display: none; }";
             document.head.appendChild(style);
-            
-            /*
-            var $pseudoArea = $(".account-pseudo");
-            
-            $nbNewMPArea.on("mouseenter", function(e) {
-                $pseudoArea.get(0).style.color = "white";
-            });
-            $nbNewMPArea.on("mouseleave", function(e) {
-                $pseudoArea.get(0).style.color = "inherit";
-            });
-            */
-            
+
             $nbNewMPArea.on("click", function(e) {
                 e.stopImmediatePropagation();
                 e.stopPropagation();
@@ -134,8 +123,8 @@ function unique() {
         }
     }
 
-    
-    
+
+
 
     var script = document.createElement("script");
     script.type = "text/javascript";
