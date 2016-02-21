@@ -6,7 +6,7 @@
 // @descriptio	Les icônes des MP et des notifications sont toujours visibles, les nombres indiqués sont régulièrement mis à jour et cliquer sur l'icône des MP amène directement à ceux-ci.
 // @version		2
 // @resource	jQueryJS    https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.0/jquery.min.js
-// @gran		GM_getResourceText
+// @grant		GM_getResourceText
 // @grant		unsafeWindow
 // @grant		GM_info
 // ==/UserScript==
