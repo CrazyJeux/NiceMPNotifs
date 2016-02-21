@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         NiceMPNotifs
-// @namespac     CrazyJeux/Daring-Do
+// @namespace    CrazyJeux/Daring-Do
 // @author       CrazyJeux/Daring-Do
 // @match        *://www.jeuxvideo.com/*
 // @description  Les icônes des MP et des notifications sont toujours visibles, les nombres indiqués sont régulièrement mis à jour et cliquer sur l'icône des MP amène directement à ceux-ci.
