@@ -1,12 +1,12 @@
 // ==UserScript==
-// @name        NiceMPNotifs
-// @namespace   CrazyJeux/Daring-Do
+// @name		NiceMPNotifs
+// @namespac	CrazyJeux/Daring-Do
 // @author		CrazyJeux/Daring-Do
 // @match		*://www.jeuxvideo.com/*
-// @description Les icônes des MP et des notifications sont toujours visibles, les nombres indiqués sont régulièrement mis à jour et cliquer sur l'icône des MP amène directement à ceux-ci.
+// @descriptio	Les icônes des MP et des notifications sont toujours visibles, les nombres indiqués sont régulièrement mis à jour et cliquer sur l'icône des MP amène directement à ceux-ci.
 // @version		2
 // @resource	jQueryJS    https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.0/jquery.min.js
-// @grant       GM_getResourceText
+// @gran		GM_getResourceText
 // @grant		unsafeWindow
 // @grant		GM_info
 // ==/UserScript==
