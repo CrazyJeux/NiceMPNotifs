@@ -108,17 +108,6 @@ function unique() {
             style.innerHTML += " .header-top >.header-container { display: none; }";
             document.head.appendChild(style);
 
-            /*
-            var $pseudoArea = $(".account-pseudo");
-
-            $nbNewMPArea.on("mouseenter", function(e) {
-                $pseudoArea.get(0).style.color = "white";
-            });
-            $nbNewMPArea.on("mouseleave", function(e) {
-                $pseudoArea.get(0).style.color = "inherit";
-            });
-            */
-
             $nbNewMPArea.on("click", function(e) {
                 e.stopImmediatePropagation();
                 e.stopPropagation();
