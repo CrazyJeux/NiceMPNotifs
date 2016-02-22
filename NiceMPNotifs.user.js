@@ -78,11 +78,13 @@ function unique() {
 
 
 
+        /*
         var sticky = document.querySelector(".header-sticky");
         if (sticky === null) {
             return;
         }
         var $sticky = $(sticky);
+        
         $sticky.css("position", "fixed")
             .css("width", "100%")
             .css("top", "0");
@@ -90,7 +92,7 @@ function unique() {
         check();
 
         $(window).scroll(check);
-
+        */
 
 
 
@@ -105,7 +107,10 @@ function unique() {
             style.type = "text/css";
             style.setAttribute("data-nicempnotifs-style", "true");
             style.innerHTML = ".account-number-mp:hover, .account-number-notif:hover { font-size: 110%; } ";
-            style.innerHTML += " .header-top >.header-container { display: none; }";
+            style.innerHTML += ".account-pseudo, .account-number-mp, .account-number-notif { display: inline !important; } ";
+            style.innerHTML += ".account-number-mp+.account-number-notif { margin-left: 0.25rem !important; } ";
+            style.innerHTML += ".account-avatar-box { margin: 0px 0.375rem 0px 0px !important; } ";
+            //style.innerHTML += " .header-top >.header-container { display: none; }";
             document.head.appendChild(style);
 
             $nbNewMPArea.on("click", function(e) {
