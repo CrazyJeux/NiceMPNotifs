@@ -65,7 +65,7 @@ function unique() {
 
 
 
-
+        /*
         function check() {
             //console.log("check...");
             if ($sticky.is(".header-affix")) {
@@ -77,8 +77,6 @@ function unique() {
 
 
 
-
-        /*
         var sticky = document.querySelector(".header-sticky");
         if (sticky === null) {
             return;
