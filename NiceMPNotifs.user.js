@@ -84,35 +84,6 @@ function unique() {
 
 
 
-        /*
-        function check() {
-            //console.log("check...");
-            if ($sticky.is(".header-affix")) {
-                //console.log("is affix");
-                $sticky.removeClass("header-affix");
-            }
-        }
-
-
-
-
-        var sticky = document.querySelector(".header-sticky");
-        if (sticky === null) {
-            return;
-        }
-        var $sticky = $(sticky);
-
-        $sticky.css("position", "fixed")
-            .css("width", "100%")
-            .css("top", "0");
-
-        check();
-
-        $(window).scroll(check);
-        */
-
-
-
         var $nbNewMPArea = $(".account-number-mp");
         if ($nbNewMPArea.length !== 0) {
             setInterval(updateNbOfNewMP, 3000);
