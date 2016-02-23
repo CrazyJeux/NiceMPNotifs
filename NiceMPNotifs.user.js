@@ -9,7 +9,25 @@
 // @grant        GM_getResourceText
 // @grant        unsafeWindow
 // @grant        GM_info
+// @run-at document-start
 // ==/UserScript==
+
+// On injecte le style le plus rapidement possible pour éviter le flickering.
+var style = document.createElement("style");
+style.type = "text/css";
+style.setAttribute("data-nicempnotifs-style", "true");
+style.innerHTML = ".account-number-mp:hover, .account-number-notif:hover { font-size: 110%; } ";
+style.innerHTML += ".account-number-mp+.account-number-notif { margin-left: 0.25rem !important; } ";
+style.innerHTML += ".account-avatar-box { margin: 0px 0.375rem 0px 0px !important; } ";
+style.innerHTML += " .header-top { display: none; }";
+document.head.appendChild(style);
+
+
+// L'exécution du script est inutile dans les iframes
+var inIframe = window.top !== window.self;
+if (inIframe) {
+    return;
+}
 
 function unique() {
     function toCall() {
@@ -82,7 +100,7 @@ function unique() {
             return;
         }
         var $sticky = $(sticky);
-        
+
         $sticky.css("position", "fixed")
             .css("width", "100%")
             .css("top", "0");
@@ -100,16 +118,6 @@ function unique() {
 
 
 
-
-            var style = document.createElement("style");
-            style.type = "text/css";
-            style.setAttribute("data-nicempnotifs-style", "true");
-            style.innerHTML = ".account-number-mp:hover, .account-number-notif:hover { font-size: 110%; } ";
-            style.innerHTML += ".account-pseudo, .account-number-mp, .account-number-notif { display: inline !important; } ";
-            style.innerHTML += ".account-number-mp+.account-number-notif { margin-left: 0.25rem !important; } ";
-            style.innerHTML += ".account-avatar-box { margin: 0px 0.375rem 0px 0px !important; } ";
-            //style.innerHTML += " .header-top >.header-container { display: none; }";
-            document.head.appendChild(style);
 
             $nbNewMPArea.on("click", function(e) {
                 e.stopImmediatePropagation();
@@ -138,19 +146,30 @@ function unique() {
 
 
 
+// document.ready ne fonctionne pas sur GM avec @run-at document-start.
+// Pour vérifier que le DOM est chargé, on vérifie la présence du footer.
+var checkDomReady = setInterval(function() {
 
+    if (document.querySelector(".stats") !== null) {
+        clearInterval(checkDomReady);
 
+        // On charge jQuery, si besoin.
+        if (typeof unsafeWindow.jQuery === "undefined") {
+            var jQueryEl = document.createElement("script");
+            jQueryEl.type = "text/javascript";
+            var content = GM_getResourceText("jQueryJS");
+            jQueryEl.innerHTML = content;
+            jQueryEl.setAttribute("data-info", "jQueryJS");
+            document.head.appendChild(jQueryEl);
+        }
 
-if (typeof unsafeWindow.jQuery === "undefined") {
-    var jQueryEl = document.createElement("script");
-    jQueryEl.type = "text/javascript";
-    var content = GM_getResourceText("jQueryJS");
-    jQueryEl.innerHTML = content;
-    jQueryEl.setAttribute("data-info", "jQueryJS");
-    document.head.appendChild(jQueryEl);
-}
+        // Puis on lance le script.
+        unique();
 
-unique();
+    }
+
+}, 50);
+
 
 //Respeed
 addEventListener('instantclick:newpage', unique);
