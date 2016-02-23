@@ -16,7 +16,8 @@
 var style = document.createElement("style");
 style.type = "text/css";
 style.setAttribute("data-nicempnotifs-style", "true");
-style.innerHTML = ".account-number-mp:hover, .account-number-notif:hover { font-size: 110%; } ";
+style.innerHTML = ".account-number-mp:hover, .account-number-notif:hover { transform: scale(1.4); } ";
+style.innerHTML += " .account-number { overflow: visible !important; }";
 style.innerHTML += ".account-number-mp+.account-number-notif { margin-left: 0.25rem !important; } ";
 style.innerHTML += ".account-avatar-box { margin: 0px 0.375rem 0px 0px !important; } ";
 style.innerHTML += " .header-top { display: none; }";
