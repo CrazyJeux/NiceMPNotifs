@@ -84,6 +84,24 @@ function unique() {
 
 
 
+        // On bloque le header en position sticky pour conserver les notifications.
+        var $stickHeader = $(".header-sticky");
+        $stickHeader.css("position", "fixed")
+            .css("width", "100%")
+            .css("top", "0");
+
+        function forceStickyHeader() {
+            if ($stickHeader.is(".header-affix")) {
+                $stickHeader.removeClass("header-affix");
+            }
+        }
+
+        forceStickyHeader();
+
+        $(window).scroll(forceStickyHeader);
+
+
+
         var $nbNewMPArea = $(".account-number-mp");
         if ($nbNewMPArea.length !== 0) {
             setInterval(updateNbOfNewMP, 3000);
