@@ -20,7 +20,7 @@ style.innerHTML = ".account-number-mp:hover, .account-number-notif:hover { trans
 style.innerHTML += " .account-number { overflow: visible !important; }";
 style.innerHTML += ".account-number-mp+.account-number-notif { margin-left: 0.25rem !important; } ";
 style.innerHTML += ".account-avatar-box { margin: 0px 0.375rem 0px 0px !important; } ";
-style.innerHTML += " .header-top { display: none; }";
+//style.innerHTML += " .header-top { display: none; }";
 document.head.appendChild(style);
 
 
@@ -83,7 +83,7 @@ function unique() {
         }
 
 
-
+		/*
         // On bloque le header en position sticky pour conserver les notifications.
         var $stickHeader = $(".header-sticky");
         $stickHeader.css("position", "fixed")
@@ -99,6 +99,7 @@ function unique() {
         forceStickyHeader();
 
         $(window).scroll(forceStickyHeader);
+		*/
 
 
 
