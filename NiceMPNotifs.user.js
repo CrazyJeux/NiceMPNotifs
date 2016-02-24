@@ -12,156 +12,150 @@
 // @run-at document-start
 // ==/UserScript==
 
-// On injecte le style le plus rapidement possible pour éviter le flickering.
-var style = document.createElement("style");
-style.type = "text/css";
-style.setAttribute("data-nicempnotifs-style", "true");
-style.innerHTML = ".account-number-mp:hover, .account-number-notif:hover { transform: scale(1.4); } ";
-style.innerHTML += " .account-number { overflow: visible !important; }";
-style.innerHTML += ".account-number-mp+.account-number-notif { margin-left: 0.25rem !important; } ";
-style.innerHTML += ".account-avatar-box { margin: 0px 0.375rem 0px 0px !important; } ";
-//style.innerHTML += " .header-top { display: none; }";
-style.innerHTML += ".account-pseudo, .account-number-mp, .account-number-notif { display: inline !important; } ";
-document.head.appendChild(style);
+'use strict';
 
+var NiceMPNotifs = {
 
-// L'exécution du script est inutile dans les iframes
-var inIframe = window.top !== window.self;
-if (inIframe) {
-    return;
-}
+    // Temps entre deux mises à jour du nombre de MP.
+    MP_UPDATE_DELAY_MS: 5000,
+    // URL de la page à charger pour récupérer le nombre de MP.
+    // Cette URL a été choisie parce qu'elle est rapide à charger.
+    MP_UPDATE_URL: "/sso/add_pseudo.php",
 
-function unique() {
-    function toCall() {
-        function updateNbOfNewMP() {
-            var xmlhttp = new XMLHttpRequest();
-            xmlhttp.onreadystatechange = function () {
-                if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-                    var h = $.parseHTML(xmlhttp.responseText);
-                    var $container = $("<div></div>");
-                    var found = false;
-                    for (var i = 0; i < h.length; i++) {
-                        var el = h[i];
-                        if (typeof el.querySelector !== "undefined") {
-                            var res = el.querySelector("#mp-menus");
-                            if (res !== null) {
-                                found = true;
-                                $container.append(res);
-                                break;
-                            }
-                        }
-                    }
-                    if (found === false) {
-                        //console.log("could not find mp-menus div...");
-                        return;
-                    }
-                    var $unreadFolders = $container.find(".nonlus:not([data-folder='1337']):not([data-folder='666']) a");
-                    //console.log("$unreadFolders length is: "+$unreadFolders.length);
-                    if ($unreadFolders.length === 0) {
-                        $nbNewMPArea.attr("data-val", 0)
-                            .attr("data-count", 0);
-                        return;
-                    }
-                    var mainNb = 0;
-                    $unreadFolders.each(function() {
-                        var $span = $(this).find("span");
-                        if ($span.length === 0) {
-                            //console.log("pas de nouveau mp dans la boite actuelle...");
-                            return;
-                        }
-                        var nb = $span.text().replace("(", "").replace(")", "").trim();
-                        nb = parseInt(nb, 10);
-                        mainNb += nb;
-                    });
-                    //console.log("mainNb='"+mainNb+"'");
-                    $nbNewMPArea.attr("data-val", mainNb)
-                        .attr("data-count", mainNb);
-                }
-            };
-            var url = "http://www.jeuxvideo.com/messages-prives/boite-reception.php";
-            xmlhttp.open("GET", url, true);
-            xmlhttp.send();
+    init: function () {
+        // L'exécution du script est inutile dans les iframes.
+        if (NiceMPNotifs.isInIframe()) {
+            return;
         }
 
+        NiceMPNotifs.addStyle();
+        NiceMPNotifs.loadJquery();
 
-		/*
-        // On bloque le header en position sticky pour conserver les notifications.
-        var $stickHeader = $(".header-sticky");
-        $stickHeader.css("position", "fixed")
-            .css("width", "100%")
-            .css("top", "0");
+        NiceMPNotifs.onDomReady(function () {
+            NiceMPNotifs.startMPCountUpdateLoop();
+        });
 
-        function forceStickyHeader() {
-            if ($stickHeader.is(".header-affix")) {
-                $stickHeader.removeClass("header-affix");
+        NiceMPNotifs.addMessageBoxLinkOnMPCount();
+    },
+
+    /**
+     * Injecte le CSS nécessaire dans la page.
+     */
+    addStyle: function () {
+        var style = document.createElement("style");
+        style.type = "text/css";
+        style.setAttribute("data-nicempnotifs-style", "true");
+
+        style.innerHTML = ".account-number-mp:hover, .account-number-notif:hover { transform: scale(1.4); }";
+        style.innerHTML += " .account-number { overflow: visible !important; }";
+        style.innerHTML += " .account-number-mp+.account-number-notif { margin-left: 0.25rem !important; }";
+        style.innerHTML += " .account-avatar-box { margin: 0px 0.375rem 0px 0px !important; }";
+        style.innerHTML += " .account-pseudo, .account-number-mp, .account-number-notif { display: inline !important; }";
+
+        document.head.appendChild(style);
+    },
+
+    isInIframe: function () {
+        return window.top !== window.self;
+    },
+
+    /**
+     * Appelle `callback` quand le dom est prêt.
+     */
+    onDomReady: function (callback) {
+        // document.ready ne fonctionne pas sur GM avec @run-at document-start.
+        var checkDomReady = setInterval(function () {
+
+            // Pour vérifier que le DOM est chargé, on vérifie la présence du footer.
+            if (document.querySelector(".stats") !== null) {
+                clearInterval(checkDomReady);
+                callback();
             }
+        }, 50);
+    },
+
+    /**
+     * Charge jQuery s'il n'est pas déjà présent dans la page.
+     */
+    loadJquery: function () {
+
+        if (unsafeWindow.jQuery !== undefined) {
+            window.$ = unsafeWindow.jQuery;
+            return;
         }
 
-        forceStickyHeader();
+        var jQueryEl = document.createElement("script");
+        jQueryEl.type = "text/javascript";
+        var content = GM_getResourceText("jQueryJS");
+        jQueryEl.innerHTML = content;
+        jQueryEl.setAttribute("data-info", "jQueryJS");
+        document.head.appendChild(jQueryEl);
+    },
 
-        $(window).scroll(forceStickyHeader);
-		*/
+    /**
+     * Lance la boucle de mise à jour du nombre de MP.
+     */
+    startMPCountUpdateLoop: function () {
+        setInterval(NiceMPNotifs.updateMPCount, NiceMPNotifs.MP_UPDATE_DELAY_MS);
+    },
 
+    /**
+     * Récupère le nouveau nombre de MP et le met à jour si besoin.
+     */
+    updateMPCount: function () {
+        NiceMPNotifs.getMPCount(function (newCount) {
+            $('.account-number-mp:first').attr('data-val', newCount);
+        });
+    },
 
+    /**
+     * Récupère le nouveau nombre de MP. Appelle `callback` quand le nombre est
+     * disponible.
+     */
+    getMPCount: function (callback) {
+        $.get(NiceMPNotifs.MP_UPDATE_URL, function (htmlPage) {
+            callback(NiceMPNotifs.parseMPCount(htmlPage));
+        });
+    },
 
-        var $nbNewMPArea = $(".account-number-mp");
-        if ($nbNewMPArea.length !== 0) {
-            setInterval(updateNbOfNewMP, 3000);
+    /**
+     * Parse et retourne le nombre de MP dans la page HTML passé en paramètre.
+     */
+    parseMPCount: function (htmlPage) {
+        // On récupère le premier `data-count` trouvé dans la page : c'est le nombre de MP.
+        var regexMP = /data-count="(\d+)"/;
+        var matchMP = htmlPage.match(regexMP);
 
+        var mpCount = (matchMP && matchMP[1] !== undefined) ? matchMP[1] : 0;
 
+        return parseInt(mpCount, 10);
+    },
 
+    /**
+     * Ajoute un lien vers la boîte de réception sur le nombre de MP.
+     */
+    addMessageBoxLinkOnMPCount: function () {
+        $(".account-number-mp").on("click", function (e) {
+            console.log('click');
+            e.stopImmediatePropagation();
+            e.stopPropagation();
+            NiceMPNotifs.openInNewTab("http://www.jeuxvideo.com/messages-prives/boite-reception.php");
+        });
+    },
 
-            $nbNewMPArea.on("click", function(e) {
-                e.stopImmediatePropagation();
-                e.stopPropagation();
-                var newLink = document.createElement("a");
-                newLink.target = "_blank";
-                var src = "http://www.jeuxvideo.com/messages-prives/boite-reception.php";
-                newLink.href = src;
-                newLink.innerHTML = src;
-                document.body.appendChild(newLink);
-                newLink.click();
-                newLink.remove();
-            });
-        }
-    }
+    /**
+     * Ouvre un lien dans un nouvel onglet en simulant le clic sur un lien
+     * en target="_blank".
+     */
+    openInNewTab: function (url) {
+        var newLink = document.createElement("a");
+        newLink.target = "_blank";
+        newLink.href = url;
+        document.body.appendChild(newLink);
+        newLink.click();
+        newLink.remove();
+    },
+};
 
-
-
-
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    script.setAttribute("data-script-nicempnotifs", "true");
-    script.innerHTML = "(function(){ " + toCall.toString() + " toCall();})();";
-    document.head.appendChild(script);
-}
-
-
-
-// document.ready ne fonctionne pas sur GM avec @run-at document-start.
-// Pour vérifier que le DOM est chargé, on vérifie la présence du footer.
-var checkDomReady = setInterval(function() {
-
-    if (document.querySelector(".stats") !== null) {
-        clearInterval(checkDomReady);
-
-        // On charge jQuery, si besoin.
-        if (typeof unsafeWindow.jQuery === "undefined") {
-            var jQueryEl = document.createElement("script");
-            jQueryEl.type = "text/javascript";
-            var content = GM_getResourceText("jQueryJS");
-            jQueryEl.innerHTML = content;
-            jQueryEl.setAttribute("data-info", "jQueryJS");
-            document.head.appendChild(jQueryEl);
-        }
-
-        // Puis on lance le script.
-        unique();
-
-    }
-
-}, 50);
-
-
-//Respeed
-addEventListener('instantclick:newpage', unique);
+// Let's go :)
+NiceMPNotifs.init();
