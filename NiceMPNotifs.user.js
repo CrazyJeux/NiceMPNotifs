@@ -33,9 +33,8 @@ var NiceMPNotifs = {
 
         NiceMPNotifs.onDomReady(function () {
             NiceMPNotifs.startMPCountUpdateLoop();
+            NiceMPNotifs.addMessageBoxLinkOnMPCount();
         });
-
-        NiceMPNotifs.addMessageBoxLinkOnMPCount();
     },
 
     /**
