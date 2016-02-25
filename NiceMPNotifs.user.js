@@ -20,8 +20,7 @@ var NiceMPNotifs = {
     MP_UPDATE_DELAY_MS: 5000,
     // URL de la page à charger pour récupérer le nombre de MP.
     // Cette URL a été choisie parce qu'elle est rapide à charger.
-    //MP_UPDATE_URL: "/sso/add_pseudo.php",
-	MP_UPDATE_URL: "/messages-prives/boite-reception.php",
+    MP_UPDATE_URL: "/sso/add_pseudo.php",
 
     init: function () {
         // L'exécution du script est inutile dans les iframes.
@@ -122,46 +121,6 @@ var NiceMPNotifs = {
      * Parse et retourne le nombre de MP dans la page HTML passé en paramètre.
      */
     parseMPCount: function (htmlPage) {
-		var h = $.parseHTML(htmlPage);
-		var $container = $("<div></div>");
-		var found = false;
-		for (var i = 0; i < h.length; i++) {
-			var el = h[i];
-			if (typeof el.querySelector !== "undefined") {
-				var res = el.querySelector("#mp-menus");
-				if (res !== null) {
-					found = true;
-					$container.append(res);
-					break;
-				}
-			}
-		}
-		if (found === false) {
-			//console.log("could not find mp-menus div...");
-			return 0;
-		}
-		var $unreadFolders = $container.find(".nonlus:not([data-folder='1337']):not([data-folder='666']) a");
-		//console.log("$unreadFolders length is: "+$unreadFolders.length);
-		if ($unreadFolders.length === 0) {
-			return 0;
-		}
-		var mainNb = 0;
-		$unreadFolders.each(function() {
-			var $span = $(this).find("span");
-			if ($span.length === 0) {
-				//console.log("pas de nouveau mp dans la boite actuelle...");
-				return;
-			}
-			var nb = $span.text().replace("(", "").replace(")", "").trim();
-			nb = parseInt(nb, 10);
-			mainNb += nb;
-		});
-		//console.log("mainNb='"+mainNb+"'");
-		return mainNb;
-		
-		
-		
-		/*
         // On récupère le premier `data-count` trouvé dans la page : c'est le nombre de MP.
         var regexMP = /data-count="(\d+)"/;
         var matchMP = htmlPage.match(regexMP);
@@ -169,7 +128,6 @@ var NiceMPNotifs = {
         var mpCount = (matchMP && matchMP[1] !== undefined) ? matchMP[1] : 0;
 
         return parseInt(mpCount, 10);
-		*/
     },
 
     /**
