@@ -37,6 +37,10 @@ var NiceMPNotifs = {
         });
     },
 
+    isInIframe: function () {
+        return window.top !== window.self;
+    },
+
     /**
      * Injecte le CSS nécessaire dans la page.
      */
@@ -52,25 +56,6 @@ var NiceMPNotifs = {
         style.innerHTML += " .account-pseudo, .account-number-mp, .account-number-notif { display: inline !important; }";
 
         document.head.appendChild(style);
-    },
-
-    isInIframe: function () {
-        return window.top !== window.self;
-    },
-
-    /**
-     * Appelle `callback` quand le dom est prêt.
-     */
-    onDomReady: function (callback) {
-        // document.ready ne fonctionne pas sur GM avec @run-at document-start.
-        var checkDomReady = setInterval(function () {
-
-            // Pour vérifier que le DOM est chargé, on vérifie la présence du footer.
-            if (document.querySelector(".stats") !== null) {
-                clearInterval(checkDomReady);
-                callback();
-            }
-        }, 50);
     },
 
     /**
@@ -89,6 +74,21 @@ var NiceMPNotifs = {
         jQueryEl.innerHTML = content;
         jQueryEl.setAttribute("data-info", "jQueryJS");
         document.head.appendChild(jQueryEl);
+    },
+
+    /**
+     * Appelle `callback` quand le dom est prêt.
+     */
+    onDomReady: function (callback) {
+        // document.ready ne fonctionne pas sur GM avec @run-at document-start.
+        var checkDomReady = setInterval(function () {
+
+            // Pour vérifier que le DOM est chargé, on vérifie la présence du footer.
+            if (document.querySelector(".stats") !== null) {
+                clearInterval(checkDomReady);
+                callback();
+            }
+        }, 50);
     },
 
     /**
