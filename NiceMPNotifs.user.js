@@ -53,7 +53,7 @@ var NiceMPNotifs = {
         style.innerHTML += " .account-number { overflow: visible !important; }";
         style.innerHTML += " .account-number-mp+.account-number-notif { margin-left: 0.25rem !important; }";
         style.innerHTML += " .account-avatar-box { margin: 0px 0.375rem 0px 0px !important; }";
-        style.innerHTML += " .account-pseudo, .account-number-mp, .account-number-notif { display: inline !important; }";
+        style.innerHTML += " .account-pseudo, .account-number-mp, .account-number-notif { display: inline-block !important; }";
 
         document.head.appendChild(style);
     },
