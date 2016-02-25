@@ -4,7 +4,7 @@
 // @author       CrazyJeux/Daring-Do
 // @match        *://www.jeuxvideo.com/*
 // @description  Les icônes des MP et des notifications sont toujours visibles, les nombres indiqués sont régulièrement mis à jour et cliquer sur l'icône des MP amène directement à ceux-ci.
-// @version      4
+// @version      5
 // @resource     jQueryJS    https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.0/jquery.min.js
 // @grant        GM_getResourceText
 // @grant        unsafeWindow
