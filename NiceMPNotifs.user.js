@@ -134,7 +134,7 @@ var NiceMPNotifs = {
      * Ajoute un lien vers la boîte de réception sur le nombre de MP.
      */
     addMessageBoxLinkOnMPCount: function () {
-        $(".account-number-mp").on("click", function (e) {
+        $(".account-number-mp:first").on("click", function (e) {
             e.stopImmediatePropagation();
             e.stopPropagation();
             NiceMPNotifs.openInNewTab("http://www.jeuxvideo.com/messages-prives/boite-reception.php");
