@@ -54,6 +54,8 @@ var NiceMPNotifs = {
         style.innerHTML += " .account-number-mp+.account-number-notif { margin-left: 0.25rem !important; }";
         style.innerHTML += " .account-avatar-box { margin: 0px 0.375rem 0px 0px !important; }";
         style.innerHTML += " .account-pseudo, .account-number-mp, .account-number-notif { display: inline-block !important; }";
+        style.innerHTML += " .header-sticky.header-affix .nav-platform { margin-left: 9rem }";
+        style.innerHTML += " .header-top .logo.header-affix .logo-link { margin-top: 3px; width: 8rem; }";
 
         document.head.appendChild(style);
     },
