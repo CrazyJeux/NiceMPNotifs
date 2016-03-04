@@ -4,7 +4,7 @@
 // @author       CrazyJeux/Daring-Do
 // @match        *://www.jeuxvideo.com/*
 // @description  Les icônes des MP et des notifications sont toujours visibles, les nombres indiqués sont régulièrement mis à jour et cliquer sur l'icône des MP amène directement à ceux-ci.
-// @version      5
+// @version      6
 // @resource     jQueryJS    https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.0/jquery.min.js
 // @grant        GM_getResourceText
 // @grant        unsafeWindow
@@ -34,6 +34,7 @@ var NiceMPNotifs = {
         NiceMPNotifs.onDomReady(function () {
             NiceMPNotifs.startMPCountUpdateLoop();
             NiceMPNotifs.addMessageBoxLinkOnMPCount();
+            NiceMPNotifs.removeHasNotifClassOnScroll();
         });
     },
 
@@ -155,6 +156,22 @@ var NiceMPNotifs = {
         newLink.click();
         newLink.remove();
     },
+    
+    removeHasNotifClassOnScroll: function() {
+        function removeHasNotifClass() {
+            if (MPspan.classList.contains("has-notif")) {
+                MPspan.classList.remove("has-notif");
+            }
+        }
+
+        var MPspan = document.querySelector(".account-number-mp");
+        if (MPspan === null) {
+            return;
+        }
+        $(window).scroll(removeHasNotifClass);
+        
+        removeHasNotifClass();
+    }
 };
 
 // Let's go :)
